@@ -27,10 +27,6 @@ def start():
         say('good evening sir!') 
     say('its david')
 
- 
-
-
-
 if __name__=='__main__':
     start()
 
