@@ -1,109 +1,89 @@
-import pyttsx3 #pip install pyttsx3
-import speech_recognition as sr #pip install speechRecognition
-import datetime
-import wikipedia #pip install wikipedia
-import webbrowser
+import pyttsx3
 import os
-import smtplib
+import datetime
 
-engine = pyttsx3.init()
-voices = engine.getProperty('voices')
-# print(voices[1].id)
-engine.setProperty('voice', voices[10].id)
+def onstart():
+    print('password?')
+    say('password?')
+    password = input()
+    while password != 'password':
+        print('password?')
+        say('password?')
+        password = input()
+    else:
+        pass
 
+    welcome()
 
-def speak(audio):
-    engine.say(audio)
-    engine.runAndWait()
+    say("write 'y' to open help file")
+    help = input('write \'y\' to open help file: ').lower()
+    if help == 'y':
+        os.system('mousepad voice_assis-david/help')
+    else:
+        pass
 
+def say(sentence):
+    voice = pyttsx3.init()
+    voice.say(sentence)
+    voice.runAndWait()
 
-def wishMe():
-    hour = int(datetime.datetime.now().hour)
-    if hour>=0 and hour<12:
-        speak("Good Morning!")
+def welcome():
+    time = int(datetime.datetime.now().hour)
+    if time>0 and time<12:
+        print('good morning sir')
+        say('good morning sir')
+    elif time>12 and time<16:
+        print('good afternoon sir')
+        say('good afternoon sir')
+    elif time>16 and time<0:
+        print('good evening sir')
+        say('good evening sir')
+    print('you should go to sleep sir, thats late night')
+    say('you should go to sleep sir, thats late night')
 
-    elif hour>=12 and hour<18:
-        speak("Good Afternoon!")   
+def operation_activator():
+    print('how can i help you?')
+    say('how can i help you?')
+    operation_name = input("keyword: ").lower()
+    if operation_name == "files":
+        open_any_file()
+    elif operation_name == "entertain" or "et" :
+        print('music or movie?')
+        say('music or movie?')
+        answer = input().lower
+        if answer == "mus":
+            play_music()
 
     else:
-        speak("Good Evening!")  
+        print('wrong keyword')
+        say('wrong keyword')
+        operation_activator()
 
-    speak("I am david Sir. Please tell me how may I help you")       
+def play_music():
 
-def takeCommand():
-    #It takes microphone input from the user and returns string output
+    def what_to_play():
+        answer = input()
+        if answer == "on":
+            os.system('spotify')
+        elif answer == "off":
+            os.system("vlc /home/ansh/Music/")
+        else:
+            print('error')
+            say('error')
+            what_to_play()
 
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Listening...")
-        r.pause_threshold = 1
-        audio = r.listen(source)
+    print('online(on) or offline(off) ')
+    say('online or offline ')
+    what_to_play()
 
-    try:
-        print("Recognizing...")    
-        query = r.recognize_google(audio, language='en-in')
-        print(f"User said: {query}\n")
 
-    except Exception as e:
-        # print(e)    
-        print("Say that again please...")  
-        return "None"
-    return query
+def play_movie():
+    say('a')
 
-def sendEmail(to, content):
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.ehlo()
-    server.starttls()
-    server.login('youremail@gmail.com', 'your-password')
-    server.sendmail('youremail@gmail.com', to, content)
-    server.close()
+def open_any_file():
+    say('coming soon')
 
 if __name__ == "__main__":
-    wishMe()
-    while True:
-    # if 1:
-        query = takeCommand().lower()
-
-        # Logic for executing tasks based on query
-        if 'wikipedia' in query:
-            speak('Searching Wikipedia...')
-            query = query.replace("wikipedia", "")
-            results = wikipedia.summary(query, sentences=2)
-            speak("According to Wikipedia")
-            print(results)
-            speak(results)
-
-        elif 'open youtube' in query:
-            webbrowser.open("youtube.com")
-
-        elif 'open google' in query:
-            webbrowser.open("google.com")
-
-        elif 'open stackoverflow' in query:
-            webbrowser.open("stackoverflow.com")   
-
-
-        elif 'play music' in query:
-            music_dir = 'D:\\Non Critical\\songs\\Favorite Songs2'
-            songs = os.listdir(music_dir)
-            print(songs)    
-            os.startfile(os.path.join(music_dir, songs[0]))
-
-        elif 'the time' in query:
-            strTime = datetime.datetime.now().strftime("%H:%M:%S")    
-            speak(f"Sir, the time is {strTime}")
-
-        elif 'open code' in query:
-            codePath = "C:\\Users\\Haris\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
-            os.startfile(codePath)
-
-        elif 'email to harry' in query:
-            try:
-                speak("What should I say?")
-                content = takeCommand()
-                to = "harryyourEmail@gmail.com"    
-                sendEmail(to, content)
-                speak("Email has been sent!")
-            except Exception as e:
-                print(e)
-                speak("Sorry my friend harry bhai. I am not able to send this email")    
+    onstart()
+    welcome()
+    operation_activator()
